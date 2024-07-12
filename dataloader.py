@@ -80,6 +80,16 @@ def load_dataset(dataset='cifar10', datapath='cifar10/data', batch_size=128, \
 
     return train_loader, test_loader
 
+def data_dimension(name_dataset):
+    if name_dataset == "cifar10":
+        input_dim = 3 * 32 * 32
+        output_dim = 10
+    elif name_dataset == "mnist":
+        input_dim = 28 * 28
+        output_dim = 10
+    else:
+        raise Exception("Unknown data sets: please choose either mnist or cifar10")
+    return input_dim, output_dim
 
 ###############################################################
 ####                        MAIN

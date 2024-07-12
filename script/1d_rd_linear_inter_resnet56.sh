@@ -1,0 +1,2 @@
+python plot_1D.py --surf_file /home/tung/Postdoc1/loss-landscape/cifar10/trained_nets/resnet56/resnet56_sgd_lr=0.1_bs=128_wd=0.0005/model_300.t7_weights_xignore=biasbn_xnorm=filter.h5_[-10.0,10.0,500].h5 \
+    --log --xmin -10 --xmax 10 --loss_max 10e20

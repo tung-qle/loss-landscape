@@ -65,6 +65,9 @@ def setup_surface_file(args, surf_file, dir_file):
     if args.y:
         ycoordinates = np.linspace(args.ymin, args.ymax, num=args.ynum)
         f['ycoordinates'] = ycoordinates
+
+    if args.model == "mlp":
+        f['architectures'] = list(args.hidden_dims)
     f.close()
 
     return surf_file
@@ -180,6 +183,9 @@ if __name__ == '__main__':
     parser.add_argument('--model_file2', default='', help='use (model_file2 - model_file) as the xdirection')
     parser.add_argument('--model_file3', default='', help='use (model_file3 - model_file) as the ydirection')
     parser.add_argument('--loss_name', '-l', default='crossentropy', help='loss functions: crossentropy | mse')
+    parser.add_argument('--hidden_dims', default=None, nargs="+", type=int, help='hidden dimensions (applicable only for MLP)')
+    parser.add_argument('--batch_norm_enabled', default=False, type=bool, help='whether to use batch norm or not')
+    parser.add_argument('--bias_enabled', default=True, type=bool, help='whether to use bias in fully connected layers or not')
 
     # direction parameters
     parser.add_argument('--dir_file', default='', help='specify the name of direction file, or the path to an existing direction file')
@@ -241,7 +247,13 @@ if __name__ == '__main__':
     #--------------------------------------------------------------------------
     # Load models and extract parameters
     #--------------------------------------------------------------------------
-    net = model_loader.load(args.dataset, args.model, args.model_file)
+    if args.model == "mlp":
+        input_dim, output_dim = dataloader.data_dimension(args.dataset)
+        if args.hidden_dims == None:
+            raise Exception("For MLP models, please specify the hidden dimensions of your model with --hidden_dims.")
+        net = model_loader.loadMLP(input_dim, list(args.hidden_dims), output_dim, args.batch_norm_enabled, args.bias_enabled)
+    else:
+        net = model_loader.load(args.dataset, args.model, args.model_file)
     w = net_plotter.get_weights(net) # initial parameters
     s = copy.deepcopy(net.state_dict()) # deepcopy since state_dict are references
     if args.ngpu > 1:

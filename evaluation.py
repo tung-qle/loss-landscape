@@ -40,7 +40,9 @@ def eval_loss(net, criterion, loader, use_cuda=False):
                 if use_cuda:
                     inputs, targets = inputs.cuda(), targets.cuda()
                 outputs = net(inputs)
+                print(outputs)
                 loss = criterion(outputs, targets)
+                print("Index: ", batch_idx, ", average_loss: ", loss)
                 total_loss += loss.item()*batch_size
                 _, predicted = torch.max(outputs.data, 1)
                 correct += predicted.eq(targets).sum().item()
@@ -63,4 +65,5 @@ def eval_loss(net, criterion, loader, use_cuda=False):
                 _, predicted = torch.max(outputs.data, 1)
                 correct += predicted.cpu().eq(targets).sum().item()
 
+    print("At the end, it does not matter: ", total_loss/total)
     return total_loss/total, 100.*correct/total
