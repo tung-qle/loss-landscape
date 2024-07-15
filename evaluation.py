@@ -40,9 +40,7 @@ def eval_loss(net, criterion, loader, use_cuda=False):
                 if use_cuda:
                     inputs, targets = inputs.cuda(), targets.cuda()
                 outputs = net(inputs)
-                print(outputs)
                 loss = criterion(outputs, targets)
-                print("Index: ", batch_idx, ", average_loss: ", loss)
                 total_loss += loss.item()*batch_size
                 _, predicted = torch.max(outputs.data, 1)
                 correct += predicted.eq(targets).sum().item()
@@ -59,11 +57,11 @@ def eval_loss(net, criterion, loader, use_cuda=False):
                 one_hot_targets = Variable(one_hot_targets)
                 if use_cuda:
                     inputs, one_hot_targets = inputs.cuda(), one_hot_targets.cuda()
-                outputs = F.softmax(net(inputs))
+                # outputs = F.softmax(net(inputs))
+                outputs = net(inputs)
                 loss = criterion(outputs, one_hot_targets)
                 total_loss += loss.item()*batch_size
                 _, predicted = torch.max(outputs.data, 1)
                 correct += predicted.cpu().eq(targets).sum().item()
 
-    print("At the end, it does not matter: ", total_loss/total)
     return total_loss/total, 100.*correct/total

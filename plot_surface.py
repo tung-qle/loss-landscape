@@ -99,7 +99,7 @@ def crunch(surf_file, net, w, s, d, dataloader, loss_key, acc_key, comm, rank, a
     # The coordinates of each unfilled index (with respect to the direction vectors
     # stored in 'd') are stored in 'coords'.
     inds, coords, inds_nums = scheduler.get_job_indices(losses, xcoordinates, ycoordinates, comm)
-
+    
     print('Computing %d values for rank %d'% (len(inds), rank))
     start_time = time.time()
     total_sync = 0.0

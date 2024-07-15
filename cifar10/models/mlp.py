@@ -13,12 +13,14 @@ class MLP(nn.Module):
         self.bias_enabled = bias_enabled
 
         # Define network paramterers
-        list_dims = [input_dim] + hidden_dims + [output_dim] 
+        list_dims = [input_dim] + hidden_dims
         self.network = self._build_sequence_fc_layers(list_dims, batch_norm_enabled, bias_enabled)
+        self.last_linear_fc = nn.Linear(hidden_dims[-1], output_dim, bias = bias_enabled)
 
     def forward(self, x):
-        out = x.view(out.size(0), -1)
+        out = x.view(x.size(0), -1)
         out = self.network(out)
+        out = self.last_linear_fc(out)
         return out
 
     def _build_sequence_fc_layers(self, list_dims, batch_norm_enabled, bias_enabled):
